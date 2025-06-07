@@ -10,7 +10,7 @@ export const companiesRepository = {
   // Lista todas as empresas
   async findAll() {
     return prisma.company.findMany({
-      include: { products: true }, // opcional, inclui produtos
+      include: { products: false }, // opcional, inclui produtos
     });
   },
 
@@ -37,8 +37,13 @@ export const companiesRepository = {
     });
   },
 
-  // Deleta uma empresa
+  // Deleta uma empresa e seus produtos associados
   async delete(id: number) {
+    // Primeiro, deleta os produtos associados à empresa
+    await prisma.product.deleteMany({
+      where: { companyId: id },
+    });
+    // Depois, deleta a empresa
     return prisma.company.delete({
       where: { id },
     });

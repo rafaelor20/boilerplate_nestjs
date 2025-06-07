@@ -41,7 +41,8 @@ export const productsRepository = {
   // Busca produtos de uma empresa específica
   async findByCompanyId(companyId: number) {
     return prisma.product.findMany({
-      where: { companyId },
+      where: { companyId: companyId},
+      include: { company: false }, // não inclui dados da empresa
     });
   },
 };

@@ -1,4 +1,4 @@
-import { productsRepository } from '../../repositories/productsRepository';
+import { productsRepository } from '../../repositories/products-repository';
 import { companiesRepository } from '../../repositories/companies-repository';
 
 export const productsService = {
