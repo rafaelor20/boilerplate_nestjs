@@ -1,0 +1,24 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Company {
+    id       Int       @id @default(autoincrement())
+    name     String
+    address  String?
+    products Product[]
+}
+
+model Product {
+    id        Int     @id @default(autoincrement())
+    name      String
+    price     Float
+    companyId Int
+    company   Company @relation(fields: [companyId], references: [id])
+}
+
+generator client {
+    provider      = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
