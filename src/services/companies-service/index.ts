@@ -1,37 +1,53 @@
-import { User } from '@prisma/client';
-import bcrypt from 'bcrypt';
-import { duplicatedEmailError } from './errors';
-import userRepository from '@/repositories/user-repository';
-import { createUserSchema } from '@/schemas';
+import { companiesRepository } from '../../repositories/companies-repository';
 
-export async function createUser({ email, password }: CreateUserParams): Promise<User> {
-  await validateUniqueEmailOrFail(email);
+export const companiesService = {
+  async createCompany(data: { name: string; address?: string }) {
+    // Regra de negócio: Nome único
+    const existingCompany = await companiesRepository.findByName(data.name);
+    if (existingCompany) {
+      throw new Error('Empresa já cadastrada');
+    }
 
-  await validateCreateUserParamsOrFail({ email, password });
+    return companiesRepository.create(data);
+  },
 
-  const hashedPassword = await bcrypt.hash(password, 12);
-  return userRepository.create({
-    email,
-    password: hashedPassword,
-  });
-}
+  async getAllCompanies() {
+    return companiesRepository.findAll();
+  },
 
-async function validateUniqueEmailOrFail(email: string) {
-  const userWithSameEmail = await userRepository.findByEmail(email);
-  if (userWithSameEmail) {
-    throw duplicatedEmailError();
-  }
-}
+  async getCompanyById(id: number) {
+    const company = await companiesRepository.findById(id);
+    if (!company) {
+      throw new Error('Empresa não encontrada');
+    }
+    return company;
+  },
 
-async function validateCreateUserParamsOrFail(params: CreateUserParams) {
-  await createUserSchema.validateAsync(params);
-}
+  async updateCompany(id: number, data: { name?: string; address?: string }) {
+    const company = await companiesRepository.findById(id);
+    if (!company) {
+      throw new Error('Empresa não encontrada');
+    }
 
-export type CreateUserParams = Pick<User, 'email' | 'password'>;
+    if (data.name && data.name !== company.name) {
+      const nameExists = await companiesRepository.findByName(data.name);
+      if (nameExists) {
+        throw new Error('Nome de empresa já utilizado');
+      }
+    }
 
-const userService = {
-  createUser,
+    return companiesRepository.update(id, data);
+  },
+
+  async deleteCompany(id: number) {
+    const company = await companiesRepository.findById(id);
+    if (!company) {
+      throw new Error('Empresa não encontrada');
+    }
+
+    // Se quiser, pode verificar se a empresa possui produtos e impedir exclusão
+    // ou então remover em cascata, dependendo da regra de negócio
+
+    return companiesRepository.delete(id);
+  },
 };
-
-export * from './errors';
-export default userService;

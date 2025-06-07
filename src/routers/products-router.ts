@@ -1,12 +1,14 @@
 import { Router } from 'express';
-import { getHistoric, storeTransaction, deleteTransaction } from '@/controllers/products-controller';
+import { productsController } from '../controllers/products-controller';
 
-const productRouter = Router();
+const productsRouter = Router();
 
-productRouter
+productsRouter
   .all('/*')
-  .get('/historic', getHistoric)
-  .post('/store', storeTransaction)
-  .delete('/delete/:transactionId', deleteTransaction);
+  .post('/', productsController.create)
+  .get('/', productsController.getAll)
+  .get('/:id', productsController.getById)
+  .patch('/:id', productsController.update)
+  .delete('/:id', productsController.delete);
 
-export { productRouter };
+export { productsRouter };
