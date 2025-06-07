@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17-alpine
+    image: rafaelor20/crud_app:v1
     container_name: crud_bd
     restart: always
     ports:
