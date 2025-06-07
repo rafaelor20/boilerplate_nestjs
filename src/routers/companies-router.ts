@@ -11,6 +11,6 @@ companiesRouter
   .get('/:id', companiesController.getById)
   .patch('/:id', companiesController.update)
   .delete('/:id', companiesController.delete)
-  .get('/products/:id', productsController.getById);
+  .get('/products/:id', productsController.getByCompany);
 
 export { companiesRouter };

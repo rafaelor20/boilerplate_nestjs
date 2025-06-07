@@ -42,7 +42,7 @@ export const productsRepository = {
   async findByCompanyId(companyId: number) {
     return prisma.product.findMany({
       where: { companyId: companyId},
-      include: { company: false }, // não inclui dados da empresa
+      include: { company: false },
     });
   },
 };

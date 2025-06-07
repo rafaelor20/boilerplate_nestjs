@@ -62,7 +62,7 @@ export const productsController = {
 
   async getByCompany(req: Request, res: Response) {
     try {
-      const companyId = parseInt(req.params.companyId);
+      const companyId = parseInt(req.params.id);
       const products = await productsService.getProductsByCompany(companyId);
       return res.json(products);
     } catch (error: any) {
