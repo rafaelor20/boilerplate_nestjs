@@ -1,56 +1,49 @@
-import { Prisma } from '@prisma/client';
-import { prisma } from '@/config';
+import { PrismaClient } from '@prisma/client';
 
-async function getCredits(userId: number) {
-  return prisma.credit.findMany({
-    where: { userId: userId, paid: false },
-  });
-}
+const prisma = new PrismaClient();
 
-async function getAllCredits(userId: number) {
-  return prisma.credit.findMany({
-    where: { userId: userId },
-  });
-}
+export const productsRepository = {
+  // Cria um produto
+  async create(data: { name: string; price: number; companyId: number }) {
+    return prisma.product.create({ data });
+  },
 
-async function getCreditById(id: number) {
-  return prisma.credit.findUnique({
-    where: { id: id },
-  });
-}
+  // Lista todos os produtos
+  async findAll() {
+    return prisma.product.findMany({
+      include: { company: true }, // inclui dados da empresa
+    });
+  },
 
-async function removeCreditById(id: number) {
-  return prisma.credit.delete({
-    where: { id: id },
-  });
-}
+  // Busca produto por ID
+  async findById(id: number) {
+    return prisma.product.findUnique({
+      where: { id },
+      include: { company: true },
+    });
+  },
 
-async function storeCredit(data: Prisma.CreditUncheckedCreateInput) {
-  return prisma.credit.create({ data });
-}
+  // Atualiza um produto
+  async update(id: number, data: { name?: string; price?: number; companyId?: number }) {
+    return prisma.product.update({
+      where: { id },
+      data,
+    });
+  },
 
-async function updateCreditAmount(id: number, amount: number) {
-  return prisma.credit.update({
-    where: { id: id },
-    data: { amount: amount },
-  });
-}
+  // Deleta um produto
+  async delete(id: number) {
+    return prisma.product.delete({
+      where: { id },
+    });
+  },
 
-async function payCredit(id: number) {
-  return prisma.credit.update({
-    where: { id: id },
-    data: { paid: true },
-  });
-}
-
-const creditRepository = {
-  getCredits,
-  getAllCredits,
-  storeCredit,
-  getCreditById,
-  removeCreditById,
-  updateCreditAmount,
-  payCredit,
+  // Busca produtos de uma empresa específica
+  async findByCompanyId(companyId: number) {
+    return prisma.product.findMany({
+      where: { companyId },
+    });
+  },
 };
 
-export default creditRepository;
+export default productsRepository;

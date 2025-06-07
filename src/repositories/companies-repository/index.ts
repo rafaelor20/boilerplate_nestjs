@@ -1,56 +1,48 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
-async function getCredits(userId: number) {
-  return prisma.credit.findMany({
-    where: { userId: userId, paid: false },
-  });
-}
+export const companiesRepository = {
+  // Cria uma nova empresa
+  async create(data: { name: string; address?: string }) {
+    return prisma.company.create({ data });
+  },
 
-async function getAllCredits(userId: number) {
-  return prisma.credit.findMany({
-    where: { userId: userId },
-  });
-}
+  // Lista todas as empresas
+  async findAll() {
+    return prisma.company.findMany({
+      include: { products: true }, // opcional, inclui produtos
+    });
+  },
 
-async function getCreditById(id: number) {
-  return prisma.credit.findUnique({
-    where: { id: id },
-  });
-}
+  // Busca empresa por ID
+  async findById(id: number) {
+    return prisma.company.findUnique({
+      where: { id },
+      include: { products: true },
+    });
+  },
 
-async function removeCreditById(id: number) {
-  return prisma.credit.delete({
-    where: { id: id },
-  });
-}
+  // Busca empresa por nome (para validar duplicidade)
+  async findByName(name: string) {
+    return prisma.company.findUnique({
+      where: { name },
+    });
+  },
 
-async function storeCredit(data: Prisma.CreditUncheckedCreateInput) {
-  return prisma.credit.create({ data });
-}
+  // Atualiza uma empresa
+  async update(id: number, data: { name?: string; address?: string }) {
+    return prisma.company.update({
+      where: { id },
+      data,
+    });
+  },
 
-async function updateCreditAmount(id: number, amount: number) {
-  return prisma.credit.update({
-    where: { id: id },
-    data: { amount: amount },
-  });
-}
-
-async function payCredit(id: number) {
-  return prisma.credit.update({
-    where: { id: id },
-    data: { paid: true },
-  });
-}
-
-const creditRepository = {
-  getCredits,
-  getAllCredits,
-  storeCredit,
-  getCreditById,
-  removeCreditById,
-  updateCreditAmount,
-  payCredit,
+  // Deleta uma empresa
+  async delete(id: number) {
+    return prisma.company.delete({
+      where: { id },
+    });
+  },
 };
 
-export default creditRepository;
+export default companiesRepository;
