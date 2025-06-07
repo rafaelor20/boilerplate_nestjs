@@ -48,16 +48,16 @@ Editar
 - **POST** `/companies` — Cria uma nova empresa.
 - **GET** `/companies` — Lista todas as empresas.
 - **GET** `/companies/:id` — Consulta uma empresa pelo ID.
-- **PUT** `/companies/:id` — Atualiza uma empresa.
+- **PATCH** `/companies/:id` — Atualiza uma empresa.
 - **DELETE** `/companies/:id` — Remove uma empresa.
 
 ### 🛒 Produtos
 - **POST** `/products` — Cria um novo produto.
 - **GET** `/products` — Lista todos os produtos.
 - **GET** `/products/:id` — Consulta um produto pelo ID.
-- **PUT** `/products/:id` — Atualiza um produto.
+- **PATCH** `/products/:id` — Atualiza um produto.
 - **DELETE** `/products/:id` — Remove um produto.
-- **GET** `/products/company/:companyId` — Lista todos os produtos de uma empresa.
+- **GET** `/companies/products/:companyId` — Lista todos os produtos de uma empresa.
 
 ---
 
