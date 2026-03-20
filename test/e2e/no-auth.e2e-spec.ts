@@ -1,6 +1,7 @@
+import { jest, describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
+import request = require('supertest');
 import { AppModule } from '../../src/app.module';
 import { MailService } from '../../src/modules/mail/mail.service';
 
