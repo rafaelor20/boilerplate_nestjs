@@ -47,6 +47,7 @@ export class UpdateAdminDto {
   @IsString()
   @MinLength(8)
   @MaxLength(8)
+  @IsOptional()
   password?: string;
 
   @ApiProperty({ enum: AdminPermissions, enumName: 'AdminPermissions', type: [AdminPermissions] })
